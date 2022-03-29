@@ -7,7 +7,6 @@ exports.userSignup = (req, res, next) => {
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
-      console.log(hash);
       const user = new User({
         email: req.body.email,
         password: hash,
@@ -21,6 +20,7 @@ exports.userSignup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+  console.log("route login");
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
@@ -34,10 +34,74 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user._id,
-            token: "TOKEN",
+            token: jwt.sign({ userId: user._id }, "iughgu48U9ughou", {
+              expiresIn: "24h",
+            }),
           });
         })
         .catch((error) => res.status(500).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
 };
+exports.getUser = (req, res, next) => {
+  console.log("route getUser");
+  User.findOne({ _id: req.body.userId })
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+      }
+      res.status(200).json({
+        userId: user._id,
+        token: jwt.sign({ userId: user._id }, "iughgu48U9ughou", {
+          expiresIn: "24h",
+        }),
+      });
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+exports.UpdateUser = (req, res, next) => {
+  console.log("route UpdateUser");
+  User.findOne({ _id: req.body.userId })
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+      }
+      user.email = req.body.email;
+      user.password = req.body.password;
+      user
+        .save()
+        .then(() => res.status(200).json({ message: "utilisateur modifié" }))
+        .catch((error) => res.status(400).json({ error }));
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+exports.DeleteUser = (req, res, next) => {
+  console.log("route DeleteUser");
+  User.findOne({ _id: req.body.userId })
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+      }
+      user
+        .delete()
+        .then(() => res.status(200).json({ message: "utilisateur supprimé" }))
+        .catch((error) => res.status(400).json({ error }));
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+exports.getAllUsers = (req, res, next) => {
+  console.log("route getAllUsers");
+  User.find()
+    .then((users) => {
+      if (!users) {
+        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+      }
+      res.status(200).json({
+        users,
+      });
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+
+module.exports = exports;
+//login, userSignup, getUser, UpdateUser, DeleteUser, getAllUsers;

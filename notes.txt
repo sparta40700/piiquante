@@ -1,0 +1,31 @@
+inserer HTTPOnly(non applicable à se projet)
+
+
+
+Voici quelques bonnes questions à poser :
+
+Existe-t-il des pare-feux pour toutes les applications et tous les serveurs ? 
+
+Est-ce que seuls les ports nécessaires sont ouverts avec des ensembles de règles limités ?
+
+Les pare-feux limitent-ils le type de trafic sur les ports ouverts ?
+
+De plus, y a-t-il un processus mis en place pour détecter les anomalies dans le trafic web ?
+
+
+
+
+Résumé SECU-INFO 
+
+
+Lors de la conception d'une application web, évaluez les composants présentant des vulnérabilités connues.
+
+Les composants peuvent présenter de nouvelles vulnérabilités tout au long du cycle de vie du produit.
+
+Patchez toujours les zones présentant de nouvelles vulnérabilités.
+
+Votre travail n'est pas terminé après que vous ayez écrit un code sécurisé.
+
+Assurez-vous que les pare-feux et les plateformes sont protégés et configurés de manière à respecter les bonnes pratiques de sécurité.
+
+Connectez-vous avec les administrateurs de bases de données pour vous assurer que la base de données est sécurisée.
