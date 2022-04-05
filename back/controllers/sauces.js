@@ -11,12 +11,17 @@ exports.getAllSauces = (req, res, next) => {
 };
 
 exports.createSauce = (req, res, next) => {
-  console.log(req.body);
-  console.log("req.file", req.file);
+  console.log(req.body.sauce);
+  console.log(req.body.userId);
+  console.log(req.userId);
+  console.log("req.file", req.file.filename);
+  const sauceParse = JSON.parse(req.body.sauce);
   const sauce = new sauces({
-    ...req.body,
+    ...sauceParse,
     imageUrl: "http://localhost:3000/images/" + req.file.filename,
-    userId: req.userId,
+    likes: 0,
+    dislikes: 0,
+    //userId: req.body.userId,
   });
   console.log(sauce);
   sauce
