@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const userRouter = require("./routes/user");
 const saucesRouter = require("./routes/sauces");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 app.use(express.json());
@@ -28,5 +29,6 @@ app.use((req, res, next) => {
 });
 app.use("/api/auth", userRouter);
 app.use("/api/sauces", saucesRouter);
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;

@@ -102,6 +102,76 @@ exports.getAllUsers = (req, res, next) => {
     })
     .catch((error) => res.status(500).json({ error }));
 };
+exports.getUserById = (req, res, next) => {
+  console.log("route getUserById");
+  User.findOne({ _id: req.body.userId })
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+      }
+      res.status(200).json({
+        user,
+      });
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+exports.getUserByEmail = (req, res, next) => {
+  console.log("route getUserByEmail");
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+      }
+      res.status(200).json({
+        user,
+      });
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+exports.getUserByPassword = (req, res, next) => {
+  console.log("route getUserByPassword");
+  User.findOne({ password: req.body.password })
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+      }
+      res.status(200).json({
+        user,
+      });
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+exports.getUserByEmailAndPassword = (req, res, next) => {
+  console.log("route getUserByEmailAndPassword");
+  User.findOne({ email: req.body.email, password: req.body.password })
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+      }
+      res.status(200).json({
+        user,
+      });
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+exports.getUserByEmailAndPasswordAndId = (req, res, next) => {
+  console.log("route getUserByEmailAndPasswordAndId");
+  User.findOne({
+    email: req.body.email,
+    password: req.body.password,
+    _id: req.body.userId,
+  })
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+      }
+      res.status(200).json({
+        user,
+      });
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
 
 module.exports = exports;
+
 //login, userSignup, getUser, UpdateUser, DeleteUser, getAllUsers;
