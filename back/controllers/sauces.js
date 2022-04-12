@@ -77,11 +77,11 @@ exports.likes = (req, res, next) => {
   sauces
     .findById(req.params.id)
     .then((sauce) => {
-      if (sauce.userId.toString() === req.body.userId) {
+      /* if (sauce.userId.toString() === req.body.userId) {
         return res
           .status(401)
           .json({ error: "Vous ne pouvez pas liker votre sauce !" });
-      }
+      }*/
       sauce.likes = sauce.likes + 1;
       sauce
         .save()
@@ -115,7 +115,8 @@ exports.updateSauce = (req, res, next) => {
   console.log("route update sauce");
   console.log(req.params.id);
   console.log(req.body.sauce);
-  const sauceParse = JSON.parse(req.body.sauce);
+  console.log(req.body);
+  const sauceParse = req.body;
   sauces
     .findByIdAndUpdate(req.params.id, { ...sauceParse })
     .then((sauce) => res.status(201).json(sauce))
