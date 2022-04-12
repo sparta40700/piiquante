@@ -1,12 +1,35 @@
 const { application } = require("express");
 const { get } = require("mongoose");
 const sauces = require("../models/sauces");
+const { put } = require("../routes/sauces");
 
 exports.getAllSauces = (req, res, next) => {
   console.log("route des sauces");
   sauces
     .find()
     .then((sauces) => res.status(200).json(sauces))
+    .catch((error) => res.status(400).json({ error: message }));
+};
+exports.putSauce = (req, res, next) => {
+  console.log("route putSauce");
+  sauces
+    .findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          name: req.body.name,
+          manufacturer: req.body.manufacturer,
+          description: req.body.description,
+          mainPepper: req.body.mainPepper,
+          imageUrl: req.body.imageUrl,
+          heat: req.body.heat,
+          likes: req.body.likes,
+          dislikes: req.body.dislikes,
+        },
+      },
+      { new: true }
+    )
+    .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(400).json({ error: message }));
 };
 
@@ -29,18 +52,19 @@ exports.createSauce = (req, res, next) => {
     .then((sauce) => res.status(201).json(sauce))
     .catch((error) => console.log(error));
 };
-/*exports.get("/api/sauces", (req, res, next) => {
-  console.log("route des sauces");
+exports.get = (req, res, next) => {
+  console.log("route get");
   sauces
-    .find()
-    .then((sauces) => res.status(200).json(sauces))
-    .catch((error) => res.status(400).json({ error }));
-});*/
+    .findOne({ _id: req.params.id })
+    .then((sauce) => res.status(200).json(sauce))
+    .catch((error) => res.status(400).json({ error: message }));
+};
 
 exports.deleteSauce = (req, res, next) => {
   console.log("route delete sauce");
   console.log(req.params.id);
   sauces
+
     .findByIdAndDelete(req.params.id)
     .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(400).json({ error }));
@@ -151,3 +175,4 @@ exports.getAllSauces = (req, res, next) => {
     .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(400).json({ error }));
 };
+module.exports = exports;
