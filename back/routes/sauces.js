@@ -12,7 +12,7 @@ router.post("/", auth, multer, saucesControllers.createSauce);
 router.delete("/:id", auth, saucesControllers.deleteSauce);
 router.put("/:id", auth, multer, saucesControllers.updateSauce);
 router.post("/:id/like", auth, saucesControllers.likes);
-router.post("/:id/dislike", auth, saucesControllers.dislikes);
+//router.post("/:id/dislike", auth, saucesControllers.dislikes);
 
 //router.get("/:id", saucesControllers.login);
 module.exports = router;

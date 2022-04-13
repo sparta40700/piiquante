@@ -73,29 +73,30 @@ exports.likes = (req, res, next) => {
   console.log("route likes");
   console.log(req.params.id);
   console.log(req.body.userId);
-  console.log(req.userId);
+  console.log(req.body);
+  console.log(req.body.like);
   sauces
     .findById(req.params.id)
     .then((sauce) => {
-      /* if (sauce.userId.toString() === req.body.userId) {
+      console.log(sauce);
+      if (req.body.like == 0) {
+      }
+      if (req.body.like == 1) {
+        sauce.likes = sauce.likes + 1;
+        sauce.usersLiked.push(req.body.userId);
+      }
+      if (sauce.userId.toString() === req.body.userId) {
         return res
           .status(401)
           .json({ error: "Vous ne pouvez pas liker votre sauce !" });
-      }*/
-      sauce.likes = sauce.likes + 1;
+      }
       sauce
         .save()
         .then((sauce) => res.status(201).json(sauce))
         .catch((error) => res.status(400).json({ error }));
     })
-    .catch((error) => res.status(500).json({ error }));
-};
-exports.dislikes = (req, res, next) => {
-  console.log("route dislikes");
-  console.log(req.params.id);
-  console.log(req.body.userId);
-  console.log(req.userId);
-  sauces
+    .catch((error) => res.status(400).json({ error }));
+  sauce
     .findById(req.params.id)
     .then((sauce) => {
       if (sauce.userId.toString() === req.body.userId) {
@@ -110,7 +111,43 @@ exports.dislikes = (req, res, next) => {
         .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
+
+  //utilisateur qui like
+  if (sauce.usersLiked.includes(req.body.userId) === false) {
+    sauce.usersLiked.push(req.body.userId);
+  }
+  console.log(sauce.userLiked.includes(req.body.userId) === false);
+  //utilisateur qui dislike
+  if (sauce.userDisliked.includes(req.body.userId) === true) {
+    sauce.userDisliked.splice(sauce.userDisliked.indexOf(req.body.userId), 1);
+  }
+  sauce
+    .save()
+    .then((sauce) => res.status(201).json(sauce))
+    .catch((error) => res.status(400).json({ error }));
 };
+
+/*exports.dislikes = (req, res, next) => {
+  console.log("route dislikes");
+  console.log(req.params.id);
+  console.log(req.body.userId);
+  console.log(req.userId);
+  sauces
+    .findById(req.params.id)
+    .then((sauce) => {
+       if (sauce.userId.toString() === req.body.userId) {
+        return res
+          .status(401)
+          .json({ error: "Vous ne pouvez pas disliker votre sauce !" });
+      }
+      sauce.dislikes = sauce.dislikes + 1;
+      sauce
+        .save()
+        .then((sauce) => res.status(201).json(sauce))
+        .catch((error) => res.status(400).json({ error }));
+    })
+    .catch((error) => res.status(500).json({ error }));
+};*/
 exports.updateSauce = (req, res, next) => {
   console.log("route update sauce");
   console.log(req.params.id);
