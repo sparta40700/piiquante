@@ -85,11 +85,11 @@ exports.likes = (req, res, next) => {
         sauce.likes = sauce.likes + 1;
         sauce.usersLiked.push(req.body.userId);
       }
-      if (sauce.userId.toString() === req.body.userId) {
+      /*if (sauce.userId.toString() === req.body.userId) {
         return res
           .status(401)
           .json({ error: "Vous ne pouvez pas liker votre sauce !" });
-      }
+      }*/
       sauce
         .save()
         .then((sauce) => res.status(201).json(sauce))
@@ -99,18 +99,24 @@ exports.likes = (req, res, next) => {
   sauce
     .findById(req.params.id)
     .then((sauce) => {
-      if (sauce.userId.toString() === req.body.userId) {
-        return res
-          .status(401)
-          .json({ error: "Vous ne pouvez pas disliker votre sauce !" });
+      console.log(sauce);
+      if (req.body.dislike == 0) {
       }
-      sauce.dislikes = sauce.dislikes + 1;
+      if (req.body.dislike == 1) {
+        sauce.dislikes = sauce.dislikes + 1;
+        sauce.usersDisliked.push(req.body.userId);
+      }
       sauce
         .save()
         .then((sauce) => res.status(201).json(sauce))
         .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
+  /*if (sauce.userId.toString() === req.body.userId) {
+        return res
+          .status(401)
+          .json({ error: "Vous ne pouvez pas disliker votre sauce !" });
+      }*/
 
   //utilisateur qui like
   if (sauce.usersLiked.includes(req.body.userId) === false) {
