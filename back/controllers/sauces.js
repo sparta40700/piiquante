@@ -71,53 +71,56 @@ exports.deleteSauce = (req, res, next) => {
 };
 exports.likes = (req, res, next) => {
   console.log("route likes");
-  console.log(req.params.id);
+  /*console.log(req.params.id);
   console.log(req.body.userId);
   console.log(req.body);
-  console.log(req.body.like);
+  console.log(req.body.like);*/
   sauces
     .findById(req.params.id)
     .then((sauce) => {
-      console.log(sauce);
+      console.log(req.body.like);
       if (req.body.like == 0) {
+        if (sauce.usersLiked.includes(req.body.userId)) {
+          sauce.usersLiked.splice(sauce.usersLiked.indexOf(req.body.userId), 1);
+        }
+        if (sauce.usersDisliked.includes(req.body.userId)) {
+          sauce.usersDisliked.splice(
+            sauce.usersDisliked.indexOf(req.body.userId),
+            1
+          );
+        }
       }
-      if (req.body.like == 1) {
-        sauce.likes = sauce.likes + 1;
+      if (req.body.like === 1) {
+        //sauce.likes = sauce.likes + 1;
         sauce.usersLiked.push(req.body.userId);
+      }
+      if (req.body.like === -1) {
+        //sauce.dislikes = sauce.dislikes + 1;
+        sauce.usersDisliked.push(req.body.userId);
+      }
+      if (sauce.usersLiked.length === 0) {
+        sauce.likes = 0;
+      } else {
+        sauce.likes = sauce.usersLiked.length;
+      }
+      if (sauce.usersDisliked.length === 0) {
+        sauce.dislikes = 0;
+      } else {
+        sauce.dislikes = sauce.usersDisliked.length;
       }
       /*if (sauce.userId.toString() === req.body.userId) {
         return res
           .status(401)
           .json({ error: "Vous ne pouvez pas liker votre sauce !" });
       }*/
+      console.log(sauce);
       sauce
         .save()
         .then((sauce) => res.status(201).json(sauce))
         .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(400).json({ error }));
-  sauce
-    .findById(req.params.id)
-    .then((sauce) => {
-      console.log(sauce);
-      if (req.body.dislike == 0) {
-      }
-      if (req.body.dislike == 1) {
-        sauce.dislikes = sauce.dislikes + 1;
-        sauce.usersDisliked.push(req.body.userId);
-      }
-      sauce
-        .save()
-        .then((sauce) => res.status(201).json(sauce))
-        .catch((error) => res.status(400).json({ error }));
-    })
-    .catch((error) => res.status(500).json({ error }));
-  /*if (sauce.userId.toString() === req.body.userId) {
-        return res
-          .status(401)
-          .json({ error: "Vous ne pouvez pas disliker votre sauce !" });
-      }*/
-
+  /*
   //utilisateur qui like
   if (sauce.usersLiked.includes(req.body.userId) === false) {
     sauce.usersLiked.push(req.body.userId);
@@ -130,7 +133,7 @@ exports.likes = (req, res, next) => {
   sauce
     .save()
     .then((sauce) => res.status(201).json(sauce))
-    .catch((error) => res.status(400).json({ error }));
+    .catch((error) => res.status(400).json({ error }));*/
 };
 
 /*exports.dislikes = (req, res, next) => {
