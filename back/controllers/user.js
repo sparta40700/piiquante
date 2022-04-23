@@ -1,6 +1,45 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const passwordValidator = require("password-validator");
+
+const schema = new passwordValidator();
+// password validation
+exports.form = [
+  check("password")
+    .trim()
+    .notEmpty()
+    .withMessage("Password required")
+    .isLength({ min: 5 })
+    .withMessage("password must be minimum 5 length")
+    .matches(/(?=.*?[A-Z])/)
+    .withMessage("At least one Uppercase")
+    .matches(/(?=.*?[a-z])/)
+    .withMessage("At least one Lowercase")
+    .matches(/(?=.*?[0-9])/)
+    .withMessage("At least one Number")
+    .matches(/(?=.*?[#?!@$%^&*-])/)
+    .withMessage("At least one special character")
+    .not()
+    .matches(/^$|\s+/)
+    .withMessage("White space not allowed"),
+  // confirm password validation
+  check("confirmPassword")
+    .custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("Password Confirmation does not match password");
+      }
+      return true;
+    })
+    .withMessage("Password Confirmation does not match password"),
+  // email validation
+  check("email")
+    .trim()
+    .notEmpty()
+    .withMessage("Email required")
+    .isEmail()
+    .withMessage("Email is invalid"),
+];
 
 exports.userSignup = (req, res, next) => {
   console.log("je suis sur la route d'inscription");
