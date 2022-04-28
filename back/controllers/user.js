@@ -3,7 +3,7 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const passwordValidator = require("password-validator");
 
-const schema = new passwordValidator();
+/*const schema = new passwordValidator();
 // password validation
 exports.form = [
   check("password")
@@ -39,10 +39,29 @@ exports.form = [
     .withMessage("Email required")
     .isEmail()
     .withMessage("Email is invalid"),
-];
-
+];*/
+let passwordSchema = new passwordValidator();
+passwordSchema
+  .is()
+  .min(3) //min 3 characters
+  .is()
+  .max(20) // max 20 characters
+  .has()
+  .uppercase() // must have uppercase letters
+  .has()
+  .lowercase() // must have lowercase letters
+  .has() // has lowercase
+  .not()
+  .spaces() // no spaces
+  .has(/(?=.*?[#?!@$%^&*-])/);
 exports.userSignup = (req, res, next) => {
   console.log("je suis sur la route d'inscription");
+
+  console.log(passwordSchema.validate(req.body.password));
+  if (passwordSchema.validate(req.body.password) === false) {
+    return res.status(400).json({ message: "Mot de passe incorrect" });
+  }
+
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
